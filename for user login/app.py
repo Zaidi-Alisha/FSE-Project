@@ -96,10 +96,13 @@ def get_venues():
     banquets_collection = venue_db['banquets']
 
     venues = banquets_collection.find({"Area": selected_area})
-    venue_names = sorted({venue["Banquet Name"] for venue in venues})
-
-    return jsonify(venue_names)
-
+    venue_list = [
+        {
+            "name": venue["Banquet Name"],
+            "capacity": venue["Capacity"]
+        } for venue in venues
+    ]
+    return jsonify(venue_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
