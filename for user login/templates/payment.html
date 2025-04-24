@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Booking Confirmation</h2>
+        <p>You have selected <strong>{{ venue }}</strong> in <strong>{{ area }}</strong> for the <strong>{{ time }}</strong>.</p>
+        <p>The total cost is <strong>PKR {{ price }}</strong>.</p>
+        <p>To book the banquet, you need to pay at least <strong>20% advance: PKR {{ advance }}</strong>.</p>
+
+        <form action="/confirm-payment" method="POST">
+            <input type="hidden" name="venue" value="{{ venue }}">
+            <input type="hidden" name="area" value="{{ area }}">
+            <input type="hidden" name="time" value="{{ time }}">
+            <input type="hidden" name="price" value="{{ price }}">
+            <input type="hidden" name="advance" value="{{ advance }}">
+            <button type="submit">Proceed to Payment</button>
+        </form>
+
+        <br>
+        <form action="/select-area">
+            <button type="submit">No, I would not like to proceed</button>
+        </form>
+    </div>
+</body>
+</html>
