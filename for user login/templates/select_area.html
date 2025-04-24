@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Area and Venue</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Select Your Area and Venue</h2>
+        <form action="/area-selected" method="POST">
+            <label for="area">Select your area:</label>
+            <select name="area" id="area" required>
+                <option value="" disabled selected>Select an area</option>
+                {% for area in areas %}
+                    <option value="{{ area }}">{{ area }}</option>
+                {% endfor %}
+            </select>
+
+            <br><br>
+
+            <div id="venue-dropdown" style="display: none;">
+                <label for="venue">Select a venue:</label>
+                <select name="venue" id="venue" required></select>
+            </div>
+
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('area').addEventListener('change', function () {
+            const area = this.value;
+
+            fetch('/get-venues', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ area: area })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const venueSelect = document.getElementById('venue');
+                venueSelect.innerHTML = '';
+                data.forEach(function (venue) {
+                    const option = document.createElement('option');
+                    option.value = venue;
+                    option.textContent = venue;
+                    venueSelect.appendChild(option);
+                });
+
+                document.getElementById('venue-dropdown').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
