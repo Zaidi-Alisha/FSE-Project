@@ -9,5 +9,30 @@
         <h2>Welcome, {{ user }}</h2>
         <p>You are now logged in to the Venue Booking System.</p>
     </div>
+    <script>
+window.onload = function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            fetch('/location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ latitude: lat, longitude: lon })
+            }).then(response => response.json())
+              .then(data => {
+                  document.getElementById('location-info').innerHTML = data.message;
+              });
+        }, function(error) {
+            document.getElementById('location-info').innerHTML = \"Location access denied.\";
+        });
+    } else {
+        document.getElementById('location-info').innerHTML = \"Geolocation is not supported by this browser.\";
+    }
+}
+</script>
 </body>
 </html>
