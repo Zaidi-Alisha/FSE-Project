@@ -61,6 +61,27 @@
             });
         });
 
+        // After venue is selected
+document.getElementById('venue').addEventListener('change', function () {
+    const venue = this.value;
+    document.getElementById('selected_venue').value = venue;
+    // ...
+});
+
+// Update on radio button select (Day/Night)
+document.querySelectorAll('input[name="time"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+        const time = this.value;
+        document.getElementById('selected_time').value = time;
+
+        const price = (time === 'day') ?
+            document.getElementById('day-price').textContent :
+            document.getElementById('night-price').textContent;
+
+        document.getElementById('selected_price').value = price;
+    });
+});
+
         document.getElementById('venue').addEventListener('change', function () {
             const venue = this.value;
             fetch('/get-prices', {
@@ -75,6 +96,7 @@
                 document.getElementById('pricing-options').style.display = 'block';
             });
         });
+
     </script>
 </body>
 </html>
