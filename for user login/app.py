@@ -76,5 +76,9 @@ def dashboard():
         return render_template('dashboard.html', user=session['user'])
     return redirect(url_for('login'))
 
+@app.route('/venue-list')
+def venue_list():
+    return "<h2>This will be the next page where you show venues or bookings etc.</h2>"
+
 if __name__ == '__main__':
     app.run(debug=True)
