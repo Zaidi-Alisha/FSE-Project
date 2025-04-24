@@ -104,5 +104,17 @@ def get_venues():
     ]
     return jsonify(venue_list)
 
+@app.route('/payment', methods=['POST'])
+def payment():
+    area = request.form['selected_area']
+    venue = request.form['selected_venue']
+    time = request.form['selected_time']
+    price = float(request.form['selected_price'])
+
+    advance = round(price * 0.2, 2)  # 20% advance
+
+    return render_template("payment.html", venue=venue, price=price, advance=advance, time=time, area=area)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
