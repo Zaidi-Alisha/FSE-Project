@@ -80,5 +80,26 @@ def dashboard():
 def venue_list():
     return "<h2>This will be the next page where you show venues or bookings etc.</h2>"
 
+@app.route('/select-area')
+def select_area():
+    venue_db = client['venue_booking']
+    banquets_collection = venue_db['banquets']
+    areas = banquets_collection.distinct("Area")
+    return render_template("select_area.html", areas=areas)
+
+@app.route('/get-venues', methods=['POST'])
+def get_venues():
+    data = request.get_json()
+    selected_area = data.get("area")
+
+    venue_db = client['venue_booking']
+    banquets_collection = venue_db['banquets']
+
+    venues = banquets_collection.find({"Area": selected_area})
+    venue_names = sorted({venue["Banquet Name"] for venue in venues})
+
+    return jsonify(venue_names)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
