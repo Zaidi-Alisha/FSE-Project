@@ -24,6 +24,14 @@
             </div>
 
             <br><br>
+
+            <div id="pricing-options" style="display: none;">
+                <p>Choose time:</p>
+                <label><input type="radio" name="time" value="day" required> Day (PKR <span id="day-price"></span>)</label><br>
+                <label><input type="radio" name="time" value="night"> Night (PKR <span id="night-price"></span>)</label>
+            </div>
+
+            <br><br>
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -31,26 +39,38 @@
     <script>
         document.getElementById('area').addEventListener('change', function () {
             const area = this.value;
-
             fetch('/get-venues', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ area: area })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ area })
             })
-            .then(response => response.json())
-            .then(data => {
+            .then(res => res.json())
+            .then(venues => {
                 const venueSelect = document.getElementById('venue');
-                venueSelect.innerHTML = '';
-                data.forEach(function (venue) {
+                venueSelect.innerHTML = '<option disabled selected>Select a venue</option>';
+                venues.forEach(v => {
                     const option = document.createElement('option');
-                    option.value = venue;
-                    option.textContent = venue;
+                    option.value = v.name;
+                    option.textContent = `${v.name} (Capacity: ${v.capacity})`;
                     venueSelect.appendChild(option);
                 });
-
                 document.getElementById('venue-dropdown').style.display = 'block';
+                document.getElementById('pricing-options').style.display = 'none';
+            });
+        });
+
+        document.getElementById('venue').addEventListener('change', function () {
+            const venue = this.value;
+            fetch('/get-prices', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ venue })
+            })
+            .then(res => res.json())
+            .then(prices => {
+                document.getElementById('day-price').textContent = prices.day_price;
+                document.getElementById('night-price').textContent = prices.night_price;
+                document.getElementById('pricing-options').style.display = 'block';
             });
         });
     </script>
